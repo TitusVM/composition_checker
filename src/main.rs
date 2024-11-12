@@ -27,13 +27,14 @@ fn main() {
 
 
 /**
- * Dirty hack to remove last couple of bytes from an extracted component, this is to be able to verify it's signature.
+    Remove last couple of bytes from an extracted component, this is to be able to verify it's signature. These bytes are not part of the component.
  */
 fn clean_extracted(extracted: &Vec<u8>) -> Vec<u8> {
     let mut end_last_section = 0;
     for payload in wasmparser::Parser::new(0).parse_all(&extracted) {
         match payload {
             Ok(Payload::CustomSection(reader)) => {
+                // The last sections range end will define when the component actually ends. We can then only return up to then, we don't need the rest.
                 end_last_section = reader.range().end;
             }
             _ => {}
@@ -71,10 +72,8 @@ fn is_subvec(mainvec: &Vec<u8>, subvec: &Vec<u8>) -> bool {
 }*/
 
 /**
- * This function can extract component binaries from a composed (wac plug) component.
- * 
+    This function can extract component binaries from a composed (wac plug) component.
  */
-
 fn split_composition(composition: &Vec<u8>) -> Vec<Vec<u8>> {
     const SECTION_DELIMITER: [u8; 4] = [0x00, 0x61, 0x73, 0x6d];
     const SIGNATURE_DELIMITER: [u8; 20] = [
