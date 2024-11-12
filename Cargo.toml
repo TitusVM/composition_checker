@@ -1,0 +1,9 @@
+[package]
+name = "custom-section-reader"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+wasm-gen = "0.1.4"
+wasmparser = "0.219.1"
+wasmsign2 = { path = "/home/titus/work/wasmsign2/src/lib" }
